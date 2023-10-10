@@ -12,9 +12,9 @@ export default function ContentLayout() {
 
     return (
         <>
-            {typeNum === 0 && <Alerm/>}
-            {typeNum === 1 &&<Timer/>}
-            {typeNum === 2 &&<StopWatch/>}
+            {typeNum === 0 &&<Timer/>}
+            {typeNum === 1 &&<StopWatch/>}
+            {typeNum === 2 && <Alerm/>}
         </>
     );
 }
