@@ -18,52 +18,35 @@ export default function Timer() {
     const timeList = getTimeList();
     const [isStart, setIsStart] = useState(false);
 
-    const [settingTime, setSettingTime] = useState({
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-    });
+    const clickStop = () => {
+        clearInterval(timerRef.current);
+    };
 
-
-    // const clickStart = () => {
-    //     setIsStart(true);
-
-    //     let seconds = Number(settingTime.hours) * 60 * 60 +
-    //         Number(settingTime.minutes) * 60 +
-    //         Number(settingTime.seconds);
-    //     console.log(seconds);
-    //     timerRef.current = setInterval(() => {
-    //         seconds -= 1;
-
-    //         let newObj = {
-    //             hours: Math.floor((seconds / (60 * 60)) % 24),
-    //             minutes: Math.floor((seconds / 60) % 60),
-    //             seconds: Math.floor(seconds % 60),
-    //         };
-
-    //         setCurrentTime(newObj);
-    //     }, 1000);
-    // };
+    const clickReset = () => {
+        setIsStart(false);
+        setCurrentTime({
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+        });
+        clearInterval(timerRef.current);
+    };
 
     const submitForm = (e: any) => {
         e.preventDefault();
-        console.log("서브밋 했을 때 폼 ");
 
         let time: addTimeType = {
             hours: e.target['hours'].value,
             minutes: e.target['minutes'].value,
             seconds: e.target['seconds'].value,
         };
-        console.log('time', time);
-        setSettingTime(time);
-
         setIsStart(true);
 
         let seconds =
             Number(time.hours) * 60 * 60 +
             Number(time.minutes) * 60 +
             Number(time.seconds);
-        console.log(seconds);
+
         timerRef.current = setInterval(() => {
             seconds -= 1;
 
@@ -75,30 +58,19 @@ export default function Timer() {
                 };
 
                 setCurrentTime(newObj);
+            } else {
+                setIsStart(false);
+                clearInterval(timerRef.current);
+                alert('시간초과!');
             }
         }, 1000);
     };
-
-    const clickStop = () => {
-
-        console.log("멈춰~~~~@@@");
-        setIsStart(false);
-        setCurrentTime({
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-        });
-        clearInterval(timerRef.current);
-    };
-
-    useEffect(()=>{console.log("isStart", isStart)},[isStart])
-   
 
     return (
         <>
             <section className="text-center">
                 {/* 숫자 선택 */}
-                <form className="py-8" onSubmit={submitForm}>
+                <form className="py-8" onSubmit={(e) => submitForm(e)}>
                     <div className="flex mb-10">
                         {isStart ? (
                             <>
@@ -179,7 +151,7 @@ export default function Timer() {
                         )}
                     </div>
                     <div className="flex justify-around">
-                        {isStart ? (
+                        {isStart && (
                             <>
                                 <button
                                     type="button"
@@ -189,21 +161,20 @@ export default function Timer() {
                                     Stop
                                 </button>
                                 <button
-                                    type="button"
-                                    className="ms-1 border rounded px-6 py-2 bg-red-500 text-white"
-                                   
+                                    type="reset"
+                                    className="ms-1 border rounded px-6 py-2 bg-green-600 text-white"
+                                    onClick={() => clickReset()}
                                 >
-                                    임시버튼
+                                    Reset
                                 </button>
                             </>
-                        ) : (
-                            <button
-                                type="submit"
-                                className="ms-1 border rounded px-6 py-2 bg-blue-500 text-white"
-                            >
-                                Start
-                            </button>
                         )}
+                        <button
+                            type="submit"
+                            className="ms-1 border rounded px-6 py-2 bg-blue-500 text-white"
+                        >
+                            Start
+                        </button>
                     </div>
                 </form>
             </section>
